@@ -11,7 +11,6 @@ import qualified Data.Text.Lazy.Encoding as T
 
 import           Network.HTTP.Conduit
 import           Text.HTML.TagSoup
-import           Text.Pretty.Simple
 
 import           OpenGraph
 
@@ -23,11 +22,17 @@ suchThat :: (a -> Bool) -> a -> Maybe a
 suchThat f a | f a       = Just a
              | otherwise = Nothing
 
+forceStripPrefix :: T.Text -> T.Text -> Maybe T.Text
+forceStripPrefix p t
+    | T.isPrefixOf p t = Just $ T.drop (T.length p) t
+    | otherwise = Nothing
+
+
 propertyFromTag :: Tag T.Text -> Maybe OGProperty
 propertyFromTag (TagOpen "meta" attributes) =
     MkOGProperty <$> property <*> content
 
-    where property = lookup "property" attributes >>= suchThat (T.isPrefixOf "og:")
+    where property = lookup "property" attributes >>= forceStripPrefix "og:"
           content  = lookup "content" attributes
 
 propertyFromTag _ = Nothing
