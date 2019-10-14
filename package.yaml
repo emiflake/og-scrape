@@ -8,7 +8,6 @@ copyright:           "2019 Emily Martins"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -30,9 +29,9 @@ dependencies:
 - text           == 1.2.4.0
 - pretty-simple  == 3.1.0.0
 - containers     == 0.6.0.1
-- raw-strings-qq == 1.1
 
 # Testing
+- raw-strings-qq == 1.1
 - hspec          == 2.7.1
 
 library:

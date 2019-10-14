@@ -18,10 +18,6 @@ openURL :: String -> IO T.Text
 openURL =
     fmap T.decodeUtf8 . simpleHttp
 
-suchThat :: (a -> Bool) -> a -> Maybe a
-suchThat f a | f a       = Just a
-             | otherwise = Nothing
-
 forceStripPrefix :: T.Text -> T.Text -> Maybe T.Text
 forceStripPrefix p t
     | T.isPrefixOf p t = Just $ T.drop (T.length p) t
