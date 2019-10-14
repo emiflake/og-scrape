@@ -20,15 +20,20 @@ extra-source-files:
 description:         An Open Graph Protocol Scraper
 
 dependencies:
-- base          >= 4.7 && < 5
-- tagsoup       == 0.14.8
-- scotty        == 0.11.5
-- aeson         == 1.4.4.0
-- http-conduit  == 2.3.7.3
-- bytestring    == 0.10.10.0
-- text          == 1.2.4.0
-- pretty-simple == 3.1.0.0
-- containers    == 0.6.0.1
+- base           >= 4.7 && < 5
+
+- tagsoup        == 0.14.8
+- scotty         == 0.11.5
+- aeson          == 1.4.4.0
+- http-conduit   == 2.3.7.3
+- bytestring     == 0.10.10.0
+- text           == 1.2.4.0
+- pretty-simple  == 3.1.0.0
+- containers     == 0.6.0.1
+- raw-strings-qq == 1.1
+
+# Testing
+- hspec          == 2.7.1
 
 library:
   source-dirs: src
