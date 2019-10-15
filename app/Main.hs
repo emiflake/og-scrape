@@ -1,17 +1,31 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import           Control.Exception
 import           Control.Monad.IO.Class
 
+import qualified Data.Text.Lazy          as T
+import qualified Data.Text.Lazy.Encoding as T
+import           Network.HTTP.Conduit
 import           Web.Scotty
 
 import           OpenGraph
 import           Scraper
 
-
 main :: IO ()
-main = scotty 8080 $
-  get "/" $ do
-    url <- param "url"
-    htmlContent <- liftIO $ openURL url
-    Web.Scotty.json . encodeProperties $ getProperties htmlContent
+main = do
+    manager <- newManager tlsManagerSettings
+    scotty 8080 $ do
+        defaultHandler (\e -> do
+            liftIO $ print e
+            Web.Scotty.json $ errorResponse RequestFailed "The website did not respond")
+        get "/" $ do
+            url <- param "url"
+            htmlContent <- liftAndCatchIO $ do
+                request <- parseRequest url
+                bs <- httpLbs request manager
+                pure . T.decodeUtf8 . responseBody $ bs
+            case getProperties htmlContent of
+                Nothing    -> Web.Scotty.json (errorResponse NoHeadTag "The website has malformed structure")
+                Just []    -> Web.Scotty.json (errorResponse NoMetaData "The website had no metadata")
+                Just props -> Web.Scotty.json $ treeFromPairs props
