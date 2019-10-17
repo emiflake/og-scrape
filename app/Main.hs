@@ -27,9 +27,7 @@ main = do
                 pure . T.decodeUtf8' . responseBody $ bs
             case htmlContent of
                 Left _ -> Web.Scotty.json $ errorResponse RequestFailed "The response body could not be decoded"
-                Right content -> do
-                    liftIO $ putStrLn $ T.unpack (mconcat ["GETTING ", T.pack url])
-                    liftIO $ putStrLn $ T.unpack content
+                Right content ->
                     case getProperties content of
                         Nothing    -> Web.Scotty.json (errorResponse NoHeadTag "The website has malformed structure")
                         Just []    -> Web.Scotty.json (errorResponse NoMetaData "The website had no metadata")
